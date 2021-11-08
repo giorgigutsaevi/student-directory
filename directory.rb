@@ -12,11 +12,25 @@ students = [
 	"Joffrey Baratheon",
 	"Norman Bates"
 ]
-# and then print them with iteration! This way our code is more DYNAMIC. 
-puts "The students of Villains Academy"
-puts "-------------"
-students.each do |student|
-	puts student
+# created a print_header method. This will display the header. 
+def print_header
+	puts "The students of Villains Academy"
+	puts "-------------"
 end
-# finally, we print the total
-puts "Overall, we have #{students.count} great students"
+
+# created a print method, that will print all our students dynamically. 
+def print(names)
+	names.each do |ele|
+		puts ele
+	end
+end
+
+# created a print_footer method, that will print our footer for us.
+def print_footer(names)
+	puts "Overall, we have #{names.count} great students"
+end
+
+# Note that above, we just defined our methods. Nothing happens until we call/invoke them!
+print_header
+print(students)
+print_footer(students)
