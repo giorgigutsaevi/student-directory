@@ -1,17 +1,27 @@
-# let's put all our students into an array
-students = [
-	{name: "Dr. Hannibal Lecter", cohort: :november},
-	{name: "Darth Vader", cohort: :november},
-	{name: "Nurse Ratched", cohort: :november},
-	{name: "Michael Corleone", cohort: :november},
-	{name: "Alex DeLarge", cohort: :november},
-	{name: "The Wicked Witch of the West", cohort: :november},
-	{name: "Terminator", cohort: :november},
-	{name: "Freddy Krueger", cohort: :november},
-	{name: "The Joker", cohort: :november},
-	{name: "Joffrey Baratheon", cohort: :november},
-	{name: "Norman Bates", cohort: :november}
-]
+# defining our input_students method, so the code is more interactive
+def input_students
+	puts "Please enter the names of the students"
+	puts "To finish, just hit return twice"
+	# creating an empty students array
+	students = []
+	# saving user's input into a `name` variable
+	name = gets.chomp
+	# while the name variable is NOT empty, repeat this code
+	while !name.empty?
+		# add the student hash to our students array
+		students.push({name: name, cohort: :november})
+		puts "Now we have #{students.size} students"
+		# get another name from the user, if the user inputs a name, repeat while loop
+		# If not, we will exit the while loop and return our students array
+		name = gets.chomp
+	end
+	# implicitly, return our array of students
+	students
+end
+
+# instead of hardcoding our students, we will get them from our input_students method
+students = input_students
+
 # created a print_header method. This will display the header. 
 def print_header
 	puts "The students of Villains Academy"
@@ -34,4 +44,3 @@ end
 print_header
 print(students)
 print_footer(students)
-
