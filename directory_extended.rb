@@ -57,7 +57,7 @@ def print(students)
   puts 'Enter `C` to sort by Cohort OR `L` for Listed: '
   user_input = gets.rstrip
 
-  if user_input == 'C'
+  if user_input == 'C' || user_input == 'c'
 
     # To print students grouped by cohort:
     cohorts = %i[
@@ -93,7 +93,7 @@ def print(students)
       end
     end
     p sort_by_cohort
-  elsif user_input == 'L'
+  elsif user_input == 'L' || user_input == "l"
     
     # To print a list of students
     i = 0
