@@ -1,8 +1,21 @@
 @students = []
 
+def save_students
+  # open the file for writing
+  file = File.open("students.csv", "w")
+  # iterate over the array of our students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort], student[:hobby]]
+    csv_line = student_data.join(", ")
+    file.puts csv_line
+  end
+  file.close
+end
+
 def print_menu
   puts '1. Input the students'
   puts '2. Show the students'
+  puts '3. Save the list to students.csv'
   puts '9. Exit' # 9 because we'll be adding more items
 end
 
@@ -13,7 +26,6 @@ def show_students
 end
 
 def interactive_menu
-  # students = []
   loop do
     # 1. print the menu and ask the user what to do
     print_menu
@@ -27,6 +39,8 @@ def interactive_menu
       students = input_students
     when '2'
       show_students
+    when '3'
+      save_students
     when '9'
       exit
     else
