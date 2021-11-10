@@ -30,7 +30,11 @@ def print(students)
 end
 
 def print_footer(names)
-	puts "Overall, we have #{names.count} great students"
+  if !names.empty?
+    puts "Overall, we have #{names.count} great students"
+  else
+    puts "No entries in the directory."
+  end
 end
   
 students = input_students
