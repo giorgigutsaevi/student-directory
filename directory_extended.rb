@@ -1,9 +1,16 @@
 @students = []
+@csv_file = ''
 
 def save_students
   # open the file for writing
-  file = File.open('students.csv', 'w')
-
+  puts "What would you like to name your file?"
+  @csv_file = STDIN.gets.chomp
+  if @csv_file.empty?
+    puts "Please name your file and add a `.csv` extension."
+    return
+  else
+      file = File.open(@csv_file, 'w')
+  end
   # iterate over the array of our students
   @students.each do |student|
     student_data = [
@@ -18,7 +25,7 @@ def save_students
   file.close
 end
 
-def load_students(filename = 'students.csv')
+def load_students(filename = @csv_file)
   if !File.exists?(filename)
     puts 'The file you are searching for does not exist. Please make sure to input the students.'
     interactive_menu
@@ -47,8 +54,8 @@ end
 def print_menu
   puts '1. Input the students'
   puts '2. Show the students'
-  puts '3. Save the list to students.csv'
-  puts '4. Load the list from students.csv'
+  puts '3. Name your .csv file & save the list'
+  puts '4. Load the list'
   puts '9. Exit'
 end
 
@@ -65,14 +72,19 @@ def interactive_menu
 
     case selection
     when '1'
+      puts "OPTION 1: INPUT STUDENT INFORMATION"
       students = input_students
     when '2'
+      puts "OPTION 2: DISPLAY STUDENT INFORMATION "
       show_students
     when '3'
+      puts "OPTION 3: SAVE STUDENT INFORMATION TO A CSV FILE"
       save_students
     when '4'
+      puts "OPTION 4: LOAD STUDENT INFORMATION TO A CSV FILE"
       load_students
     when '9'
+      puts "PROGRAM TERMINATED"
       exit
     else
       puts 'Please enter a valid command and try again.'
@@ -184,7 +196,7 @@ def print_students_list
     while i < @students.length
       if @students[i][:name].start_with?('D', 'T', 'd', 't') &&
            @students[i][:name].length < 12
-        result =1
+        result =
           "#{i + 1}. #{@students[i][:name]}, Hobbies: #{@students[i][:hobby]}, COB: #{@students[i][:cob]} (#{@students[i][:cohort]} cohort)"
         puts result.center(result.length + 5)
       end
