@@ -12,11 +12,22 @@ def save_students
   file.close
 end
 
+def load_students
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+    name, cohort = line.chomp.split(", ")
+    @students.push({name: name, cohort: cohort.to_sym})
+    puts line
+  end
+  file.close
+end
+
 def print_menu
   puts '1. Input the students'
   puts '2. Show the students'
   puts '3. Save the list to students.csv'
-  puts '9. Exit' # 9 because we'll be adding more items
+  puts '4. Load the list from students.csv'
+  puts '9. Exit' 
 end
 
 def show_students
@@ -27,7 +38,7 @@ end
 
 def interactive_menu
   loop do
-    # 1. print the menu and ask the user what to do
+    # 1. print the menu and ask th4e user what to do
     print_menu
 
     # 2. read the input and save it into a variabl
@@ -41,6 +52,8 @@ def interactive_menu
       show_students
     when '3'
       save_students
+    when '4'
+      load_students
     when '9'
       exit
     else
