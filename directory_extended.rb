@@ -12,14 +12,26 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = 'students.csv')
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(", ")
     @students.push({name: name, cohort: cohort.to_sym})
     puts line
   end
   file.close
+end
+
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil? # returns if the filename does not exist
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry, #{filename} does not exist."
+    exit
+  end
 end
 
 def print_menu
@@ -40,9 +52,9 @@ def interactive_menu
   loop do
     # 1. print the menu and ask th4e user what to do
     print_menu
-
+    
     # 2. read the input and save it into a variabl
-    selection = gets.chomp
+    selection = STDIN.gets.chomp
 
     # 3. do what the user has asked
     case selection
@@ -65,26 +77,26 @@ end
 def input_students
   puts 'Please enter the name, cohort, hobbies and country of birth of students'
   puts 'To finish, just hit return twice'
-  name = gets.rstrip
+  name = STDIN.gets.rstrip
   puts 'Enter cohort:'
-  cohort = gets.rstrip.to_sym.capitalize
+  cohort = STDIN.gets.rstrip.to_sym.capitalize
   puts 'Enter hobbies:'
-  hobby = gets.rstrip.to_sym
+  hobby = STDIN.gets.rstrip.to_sym
   puts 'Enter country of birth:'
-  cob = gets.rstrip.to_sym
+  cob = STDIN.gets.rstrip.to_sym
   until name.empty?
     @students.push({ name: name, hobby: hobby, cob: cob, cohort: cohort })
     puts "Now we have #{@students.size} #{@students.size == 1 ? 'student.' : 'students.'}"
-    name = gets.rstrip
+    name = STDIN.gets.rstrip
     if name.empty?
       next
     elsif !name.empty?
       puts 'Enter cohort:'
-      cohort = gets.rstrip.to_sym.capitalize
+      cohort = STDIN.gets.rstrip.to_sym.capitalize
       puts 'Enter hobbies:'
-      hobby = gets.rstrip.to_sym
+      hobby = STDIN.gets.rstrip.to_sym
       puts 'Enter country of birth:'
-      cob = gets.rstrip.to_sym
+      cob = STDIN.gets.rstrip.to_sym
       if cohort.empty?
         cohort = 'tbd'
       elsif hobby.empty?
@@ -106,7 +118,7 @@ end
 def print_students_list
   puts 'How would you like to print our students?'
   puts 'Enter `C` to sort by Cohort OR `L` for Listed: '
-  user_input = gets.rstrip
+  user_input = STDIN.gets.rstrip
 
   if user_input == 'C' || user_input == 'c'
     # To print students grouped by cohort:
@@ -175,8 +187,12 @@ def print_footer
   end
 end
 
+try_load_students
 interactive_menu
 
 # Step 8: Solve Additional Exercises ✅
 # Step 9: Add an interactive menu ✅
 # Step 10: Do more refactoring (add an instance variable on the main object) ✅
+# Step 11: Saving data to a file ✅
+# Step 12: Loading the data from a file ✅
+# Step 13: Taking args from the command line ✅
