@@ -2,21 +2,31 @@
 
 def save_students
   # open the file for writing
-  file = File.open("students.csv", "w")
+  file = File.open('students.csv', 'w')
+
   # iterate over the array of our students
   @students.each do |student|
-    student_data = [student[:name], student[:cohort], student[:hobby]]
-    csv_line = student_data.join(", ")
+    student_data = [
+      student[:name],
+      student[:cohort],
+      student[:hobby],
+      student[:cob],
+    ]
+    csv_line = student_data.join(', ')
     file.puts csv_line
   end
   file.close
 end
 
 def load_students(filename = 'students.csv')
-  file = File.open(filename, "r")
+  if !File.exists?(filename)
+    puts 'The file you are searching for does not exist. Please make sure to input the students.'
+    interactive_menu
+  end
+  file = File.open(filename, 'r')
   file.readlines.each do |line|
-    name, cohort = line.chomp.split(", ")
-    @students.push({name: name, cohort: cohort.to_sym})
+    name, cohort, hobby, cob = line.chomp.split(', ')
+    add_students(name, hobby, cob, cohort)
     puts line
   end
   file.close
@@ -24,7 +34,7 @@ end
 
 def try_load_students
   filename = ARGV.first
-  return if filename.nil? # returns if the filename does not exist
+  return if filename.nil?
   if File.exists?(filename)
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
@@ -39,7 +49,7 @@ def print_menu
   puts '2. Show the students'
   puts '3. Save the list to students.csv'
   puts '4. Load the list from students.csv'
-  puts '9. Exit' 
+  puts '9. Exit'
 end
 
 def show_students
@@ -50,13 +60,9 @@ end
 
 def interactive_menu
   loop do
-    # 1. print the menu and ask th4e user what to do
     print_menu
-    
-    # 2. read the input and save it into a variabl
     selection = STDIN.gets.chomp
 
-    # 3. do what the user has asked
     case selection
     when '1'
       students = input_students
@@ -85,18 +91,18 @@ def input_students
   puts 'Enter country of birth:'
   cob = STDIN.gets.rstrip.to_sym
   until name.empty?
-    @students.push({ name: name, hobby: hobby, cob: cob, cohort: cohort })
+    add_students(name, hobby, cob, cohort)
     puts "Now we have #{@students.size} #{@students.size == 1 ? 'student.' : 'students.'}"
     name = STDIN.gets.rstrip
     if name.empty?
       next
     elsif !name.empty?
       puts 'Enter cohort:'
-      cohort = STDIN.gets.rstrip.to_sym.capitalize
+      cohort = STDIN.gets.rstrip.capitalize
       puts 'Enter hobbies:'
-      hobby = STDIN.gets.rstrip.to_sym
+      hobby = STDIN.gets.rstrip
       puts 'Enter country of birth:'
-      cob = STDIN.gets.rstrip.to_sym
+      cob = STDIN.gets.rstrip
       if cohort.empty?
         cohort = 'tbd'
       elsif hobby.empty?
@@ -108,6 +114,12 @@ def input_students
       puts 'Name is not a String'
     end
   end
+end
+
+def add_students(name, hobby, cob, cohort)
+  @students.push(
+    { name: name, hobby: hobby.to_sym, cob: cob.to_sym, cohort: cohort.to_sym },
+  )
 end
 
 def print_header
@@ -172,7 +184,7 @@ def print_students_list
     while i < @students.length
       if @students[i][:name].start_with?('D', 'T', 'd', 't') &&
            @students[i][:name].length < 12
-        result =
+        result =1
           "#{i + 1}. #{@students[i][:name]}, Hobbies: #{@students[i][:hobby]}, COB: #{@students[i][:cob]} (#{@students[i][:cohort]} cohort)"
         puts result.center(result.length + 5)
       end
