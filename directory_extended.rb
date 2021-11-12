@@ -1,61 +1,12 @@
 @students = []
-@csv_file = ''
-
-def save_students
-  # open the file for writing
-  puts "What would you like to name your file?"
-  @csv_file = STDIN.gets.chomp
-  if @csv_file.empty?
-    puts "Please name your file and add a `.csv` extension."
-    return
-  else
-      file = File.open(@csv_file, 'w')
-  end
-  # iterate over the array of our students
-  @students.each do |student|
-    student_data = [
-      student[:name],
-      student[:cohort],
-      student[:hobby],
-      student[:cob],
-    ]
-    csv_line = student_data.join(', ')
-    file.puts csv_line
-  end
-  file.close
-end
-
-def load_students(filename = @csv_file)
-  if !File.exists?(filename)
-    puts 'The file you are searching for does not exist. Please make sure to input the students.'
-    interactive_menu
-  end
-  file = File.open(filename, 'r')
-  file.readlines.each do |line|
-    name, cohort, hobby, cob = line.chomp.split(', ')
-    add_students(name, hobby, cob, cohort)
-    puts line
-  end
-  file.close
-end
-
-def try_load_students
-  filename = ARGV.first
-  return if filename.nil?
-  if File.exists?(filename)
-    load_students(filename)
-    puts "Loaded #{@students.count} from #{filename}"
-  else
-    puts "Sorry, #{filename} does not exist."
-    exit
-  end
-end
+@file_folders = []
+@current_file = ''
 
 def print_menu
   puts '1. Input the students'
   puts '2. Show the students'
-  puts '3. Name your .csv file & save the list'
-  puts '4. Load the list'
+  puts '3. Save the list to students.csv'
+  puts '4. Load the list from students.csv'
   puts '9. Exit'
 end
 
@@ -72,19 +23,19 @@ def interactive_menu
 
     case selection
     when '1'
-      puts "OPTION 1: INPUT STUDENT INFORMATION"
+      puts 'OPTION 1: INPUT STUDENT INFORMATION'
       students = input_students
     when '2'
-      puts "OPTION 2: DISPLAY STUDENT INFORMATION "
+      puts 'OPTION 2: DISPLAY STUDENT INFORMATION '
       show_students
     when '3'
-      puts "OPTION 3: SAVE STUDENT INFORMATION TO A CSV FILE"
+      puts 'OPTION 3: SAVE STUDENT INFORMATION TO A CSV FILE'
       save_students
     when '4'
-      puts "OPTION 4: LOAD STUDENT INFORMATION TO A CSV FILE"
+      puts 'OPTION 4: LOAD STUDENT INFORMATION TO A CSV FILE'
       load_students
     when '9'
-      puts "PROGRAM TERMINATED"
+      puts 'PROGRAM TERMINATED'
       exit
     else
       puts 'Please enter a valid command and try again.'
@@ -128,11 +79,6 @@ def input_students
   end
 end
 
-def add_students(name, hobby, cob, cohort)
-  @students.push(
-    { name: name, hobby: hobby.to_sym, cob: cob.to_sym, cohort: cohort.to_sym },
-  )
-end
 
 def print_header
   puts 'The students of Villains Academy'
@@ -145,20 +91,25 @@ def print_students_list
   user_input = STDIN.gets.rstrip
 
   if user_input == 'C' || user_input == 'c'
+     # This clause ensures once the files are loaded again, that there are no duplicates in @students array
+     if @students[-1] == @students[-2]
+      @students.pop
+    end
+    # p @students
     # To print students grouped by cohort:
-    cohorts = %i[
-      January
-      February
-      March
-      April
-      May
-      June
-      July
-      August
-      September
-      October
-      November
-      December
+    cohorts = [
+      :January,
+      :February,
+      :March,
+      :April,
+      :May,
+      :June,
+      :July,
+      :August,
+      :September,
+      :October,
+      :November,
+      :December,
     ]
 
     cohort_list =
@@ -166,7 +117,8 @@ def print_students_list
         .map { |hash| hash[:cohort] if cohorts.include?(hash[:cohort]) }
         .compact
         .uniq
-
+    
+   
     sort_by_cohort = {}
 
     @students.each do |student|
@@ -194,6 +146,10 @@ def print_students_list
     # To print a list of students
     i = 0
     while i < @students.length
+      # This clause ensures once the files are loaded again, that there are no duplicates in @students array
+      if @students[-1] == @students[-2]
+        @students.pop
+      end
       if @students[i][:name].start_with?('D', 'T', 'd', 't') &&
            @students[i][:name].length < 12
         result =
@@ -210,6 +166,64 @@ def print_footer
     puts "Now we have #{@students.size} #{@students.size == 1 ? 'student.' : 'students.'}"
   end
 end
+
+def save_students
+  puts "How would you like to name your file?"
+  @current_file = STDIN.gets.chomp
+  @file_folders.push(@current_file)
+    file =
+      File.open(file_name = @current_file, 'w+') 
+        @students.each do |student|
+          student_data = [
+            student[:name],
+            student[:cohort],
+            student[:hobby],
+            student[:cob],
+          ]
+          csv_line = student_data.join(', ')
+          file.puts csv_line
+        end
+        file.close
+end
+
+def load_students
+  puts 'Which file would you like to load?'
+  input = STDIN.gets.chomp
+  file_to_load = ''
+  if @file_folders.include?(input)
+    file_to_load = input
+  end
+  if !File.exists?(input)
+    puts 'The file you are searching for does not exist. Please make sure to input the students.'
+    interactive_menu
+  end
+  file = File.open(input, 'r')
+  file.readlines.each do |line|
+    name, cohort, hobby, cob = line.chomp.split(', ')
+    add_students(name, hobby, cob, cohort)
+    puts line
+  end 
+  file.close
+end
+
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?               
+  if File.exists?(filename)  
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry, #{filename} does not exist."
+    exit
+  end
+end
+
+def add_students(name, hobby, cob, cohort)
+  @students.push(
+    { name: name.to_sym, hobby: hobby.to_sym, cob: cob.to_sym, cohort: cohort.to_sym },
+  )
+end
+
 
 try_load_students
 interactive_menu
