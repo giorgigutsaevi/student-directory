@@ -1,4 +1,4 @@
-
+require 'csv'
 
 @students = []
 @file_folders = []
@@ -7,8 +7,8 @@
 def print_menu
   puts '1. Input the students'
   puts '2. Show the students'
-  puts '3. Save the list to students.csv'
-  puts '4. Load the list from students.csv'
+  puts '3. Name your list and save it as a .csv file'
+  puts '4. Load your list'
   puts '9. Exit'
 end
 
@@ -174,8 +174,7 @@ def save_students
   @current_file = STDIN.gets.chomp
   @file_folders.push(@current_file)
 
-    file =
-      File.open(file_name = @current_file, 'w+') do |f|
+      CSV.open("#{@current_file}.csv", 'w+') do |csv|
         @students.each do |student|
           student_data = [
             student[:name],
@@ -183,10 +182,9 @@ def save_students
             student[:hobby],
             student[:cob],
           ]
-          csv_line = student_data.join(', ')
-          f.write(csv_line)
+          csv << student_data
+        end
       end
-  end
 end
 
 def load_students
@@ -200,12 +198,9 @@ def load_students
     puts 'The file you are searching for does not exist. Please make sure to input the students.'
     interactive_menu
   end
-  file = File.open(input, 'r')
-  file.readlines.each do |line|
-    name, cohort, hobby, cob = line.chomp.split(', ')
-    add_students(name, hobby, cob, cohort)
-    puts line
-  end 
+  file = CSV.read(input)
+  file.each {|array| p array.join(",")}
+   
 end
 
 def try_load_students
