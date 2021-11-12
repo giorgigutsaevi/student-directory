@@ -10,4 +10,4 @@ ruby directory.rb
 `directory.rb` - The very first and basic version of our program\
 `directory_extended.rb` - Second and more complex program with added functionalities\
 `directory_typos.rb` - A ruby source code with typos and solutions\
-`.gitignore` - To ignore CSV files\
+`.gitignore` - To ignore CSV files
