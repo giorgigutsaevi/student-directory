@@ -1,5 +1,18 @@
+=begin
+# This is an extended version of our initial simple student_directory program
+
+Step 8: Solve Additional Exercises - Done (all 11 of them)
+Step 9: Add an interactive menu - Done
+Step 10: Do more refactoring (add an instance variable on the main object) - Done
+Step 11: Saving data to a file - Done
+Step 12: Loading the data from a file - Done
+Step 13: Taking args from the command line - Done
+Step 14: More Exercises - Done (all 8 of them)
+=end
+
 require 'csv'
 
+# Global vars 
 @students = []
 @file_folders = []
 @current_file = ''
@@ -7,8 +20,9 @@ require 'csv'
 def print_menu
   puts '1. Input the students'
   puts '2. Show the students'
-  puts '3. Name your list and save it as a .csv file'
+  puts '3. Name & Save the list as .csv file'
   puts '4. Load your list'
+  puts '5. Quine the program (print its own source code)'
   puts '9. Exit'
 end
 
@@ -36,6 +50,9 @@ def interactive_menu
     when '4'
       puts 'OPTION 4: LOAD STUDENT INFORMATION TO A CSV FILE'
       load_students
+    when '5'
+      puts 'OPTION 5: QUINING OUR PROGRAM'
+      to_quine
     when '9'
       puts 'PROGRAM TERMINATED'
       exit
@@ -48,6 +65,7 @@ end
 def input_students
   puts 'Please enter the name, cohort, hobbies and country of birth of students'
   puts 'To finish, just hit return twice'
+  puts "Enter name:"
   name = STDIN.gets.rstrip
   puts 'Enter cohort:'
   cohort = STDIN.gets.rstrip.to_sym.capitalize
@@ -97,7 +115,6 @@ def print_students_list
      if @students[-1] == @students[-2]
       @students.pop
     end
-    # p @students
     # To print students grouped by cohort:
     cohorts = [
       :January,
@@ -221,13 +238,18 @@ def add_students(name, hobby, cob, cohort)
   )
 end
 
+# Adding to_quine method so that our program can read its own source code
+def to_quine
+  puts
+  puts "START OF OUR QUINE"
+  File.open(__FILE__, "r") do |f|
+    f.readlines.each do |line|
+      p line
+    end
+  end
+  puts "END OF OUR QUINE"
+  puts
+end
 
 try_load_students
 interactive_menu
-
-# Step 8: Solve Additional Exercises ✅
-# Step 9: Add an interactive menu ✅
-# Step 10: Do more refactoring (add an instance variable on the main object) ✅
-# Step 11: Saving data to a file ✅
-# Step 12: Loading the data from a file ✅
-# Step 13: Taking args from the command line ✅
