@@ -1,3 +1,5 @@
+
+
 @students = []
 @file_folders = []
 @current_file = ''
@@ -171,8 +173,9 @@ def save_students
   puts "How would you like to name your file?"
   @current_file = STDIN.gets.chomp
   @file_folders.push(@current_file)
+
     file =
-      File.open(file_name = @current_file, 'w+') 
+      File.open(file_name = @current_file, 'w+') do |f|
         @students.each do |student|
           student_data = [
             student[:name],
@@ -181,9 +184,9 @@ def save_students
             student[:cob],
           ]
           csv_line = student_data.join(', ')
-          file.puts csv_line
-        end
-        file.close
+          f.write(csv_line)
+      end
+  end
 end
 
 def load_students
@@ -203,7 +206,6 @@ def load_students
     add_students(name, hobby, cob, cohort)
     puts line
   end 
-  file.close
 end
 
 def try_load_students
